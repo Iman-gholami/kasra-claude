@@ -61,6 +61,7 @@ const nextConfig: NextConfig = {
     // assets are immutable per path, so a long TTL is safe.
     minimumCacheTTL: 60 * 60 * 24 * 30,
     localPatterns: [{ pathname: "/images/**" }],
+    remotePatterns: [{ protocol: "https", hostname: "images.pexels.com", pathname: "/photos/**" }],
   },
   async headers() {
     return [

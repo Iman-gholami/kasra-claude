@@ -7,6 +7,7 @@ import { Toaster } from "@/components/layout/toaster";
 import { CartDrawerLoader } from "@/components/cart/cart-drawer-loader";
 import { SearchDialogLoader } from "@/components/search/search-dialog-loader";
 import { siteConfig } from "@/lib/site";
+import { MODEL_PREVIEW_ENABLED } from "@/lib/model-photo-preview";
 import "./globals.css";
 
 /*
@@ -64,6 +65,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </a>
         <AnnouncementBar />
         <SiteHeader />
+        {MODEL_PREVIEW_ENABLED ? (
+          <p role="note" className="bg-sand-soft px-4 py-2 text-center text-xs leading-6 text-ink-soft">
+            پیش‌نمایش عکس مدل فعال است؛ این عکس‌ها نمونه هستند و رنگ، طرح یا تن‌خور واقعی محصولات را نشان نمی‌دهند.
+          </p>
+        ) : null}
         <main id="main" className="flex-1 focus:outline-none" tabIndex={-1}>
           {children}
         </main>

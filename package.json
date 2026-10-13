@@ -9,7 +9,9 @@
   },
   "scripts": {
     "dev": "next dev",
+    "dev:models": "node --env-file=.env.model-preview node_modules/next/dist/bin/next dev",
     "build": "next build",
+    "build:models": "node --env-file=.env.model-preview node_modules/next/dist/bin/next build",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "next typegen && tsc --noEmit",

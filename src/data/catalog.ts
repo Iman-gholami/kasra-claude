@@ -12,6 +12,7 @@ import {
   PRODUCT_DEFINITIONS,
   type ProductDefinition,
 } from "./catalog-source";
+import { categoryModelPhoto, productModelPhoto } from "@/lib/model-photo-preview";
 
 export const PRODUCT_IMAGE_SIZE = { width: 1200, height: 1600 } as const;
 
@@ -50,12 +51,15 @@ function buildVariants(def: ProductDefinition, sizes: string[]): ProductVariant[
   return variants;
 }
 
-function buildImages(def: ProductDefinition): ProductImage[] {
+function buildImages(def: ProductDefinition, ordinal: number): ProductImage[] {
+  const modelPhoto = productModelPhoto(def.category, ordinal);
   return def.colors.flatMap((colorKey) => {
     const color = COLORS[colorKey];
     return (["front", "back", "detail"] as const).map((kind) => ({
-      src: `/images/products/${def.slug}/${color.id}-${kind}.webp`,
-      alt: `${def.name}، رنگ ${color.name} — ${VIEW_LABELS[kind]}`,
+      src: kind === "front" && modelPhoto ? modelPhoto : `/images/products/${def.slug}/${color.id}-${kind}.webp`,
+      alt: kind === "front" && modelPhoto
+        ? `${def.name} — عکس مدل نمونه (رنگ و طرح دقیق محصول نیست)`
+        : `${def.name}، رنگ ${color.name} — ${VIEW_LABELS[kind]}`,
       colorId: color.id,
       kind,
       ...PRODUCT_IMAGE_SIZE,
@@ -63,7 +67,7 @@ function buildImages(def: ProductDefinition): ProductImage[] {
   });
 }
 
-function buildProduct(def: ProductDefinition): Product {
+function buildProduct(def: ProductDefinition, ordinal: number): Product {
   const category = CATEGORY_DEFINITIONS.find((c) => c.slug === def.category);
   if (!category) throw new Error(`Unknown category "${def.category}" for ${def.slug}`);
   const sizes = def.sizes ?? (category.sizeSystem === "numeric" ? NUMERIC_SIZES : ALPHA_SIZES);
@@ -78,7 +82,7 @@ function buildProduct(def: ProductDefinition): Product {
     price: def.price,
     compareAtPrice: def.compareAtPrice,
     description: def.description,
-    images: buildImages(def),
+    images: buildImages(def, ordinal),
     colors: def.colors.map((key) => ({ ...COLORS[key] })),
     sizes,
     variants: buildVariants(def, sizes),
@@ -102,8 +106,8 @@ export const CATEGORIES: Category[] = CATEGORY_DEFINITIONS.map((c) => ({
   searchTerms: c.searchTerms,
   order: c.order,
   image: {
-    src: `/images/categories/${c.slug}.webp`,
-    alt: `مجموعه‌ی ${c.name} بوتیک کسرا`,
+    src: categoryModelPhoto(c.slug) ?? `/images/categories/${c.slug}.webp`,
+    alt: categoryModelPhoto(c.slug) ? `عکس مدل نمونه برای دسته‌ی ${c.name}` : `مجموعه‌ی ${c.name} بوتیک کسرا`,
     ...PRODUCT_IMAGE_SIZE,
   },
 })).sort((a, b) => a.order - b.order);
