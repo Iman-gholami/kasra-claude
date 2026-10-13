@@ -17,7 +17,7 @@ test.describe("homepage and navigation", () => {
     await page.goto("/");
     await page.getByRole("link", { name: "مشاهده محصولات" }).click();
     await expect(page).toHaveURL(/\/shop$/);
-    await expect(page.getByTestId("result-count")).toHaveText(`${fa(36)} محصول`);
+    await expect(page.getByTestId("result-count").filter({ visible: true })).toHaveText(`${fa(36)} محصول`);
   });
 
   test("category navigation shows only that category", async ({ page }) => {
@@ -25,7 +25,7 @@ test.describe("homepage and navigation", () => {
     await page.getByTestId("category-tile-manto").click();
     await expect(page).toHaveURL(/\/category\/manto$/);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("مانتو");
-    await expect(page.getByTestId("result-count")).toHaveText(`${fa(12)} محصول`);
+    await expect(page.getByTestId("result-count").filter({ visible: true })).toHaveText(`${fa(12)} محصول`);
     const names = await page.getByTestId("product-card").filter({ visible: true }).locator("h3").allTextContents();
     expect(names.length).toBe(12);
     for (const name of names) expect(name).toContain("مانتو");
@@ -91,12 +91,22 @@ test.describe("search", () => {
 test.describe("catalog filtering and sorting", () => {
   test("filters update results and the shareable URL", async ({ page }) => {
     await page.goto("/category/tshirt");
-    if (isMobile(page)) await page.getByTestId("open-filters").click();
-    const panel = page.getByTestId("filter-panel").filter({ visible: true });
-    await panel.locator('label:has([data-testid="filter-size-FS"])').click();
+    const count = page.getByTestId("result-count").filter({ visible: true });
+    if (isMobile(page)) {
+      // Phones: choose in the sheet, preview the count, then apply once.
+      await page.getByTestId("open-filters").click();
+      const sheet = page.getByRole("dialog", { name: "فیلتر محصولات" });
+      await sheet.locator('label:has([data-testid="filter-size-FS"])').click();
+      await expect(sheet.getByTestId("apply-filters")).toHaveText(`نمایش ${fa(1)} محصول`);
+      await expect(page).not.toHaveURL(/size=/);
+      await sheet.getByTestId("apply-filters").click();
+      await expect(sheet).toBeHidden();
+    } else {
+      // Desktop: every change applies immediately.
+      await page.getByTestId("filter-panel").filter({ visible: true }).locator('label:has([data-testid="filter-size-FS"])').click();
+    }
     await expect(page).toHaveURL(/size=FS/);
-    await expect(page.getByTestId("result-count").first()).toHaveText(`${fa(1)} محصول`);
-    if (isMobile(page)) await page.getByTestId("apply-filters").click();
+    await expect(count).toHaveText(`${fa(1)} محصول`);
     const cards = page.getByTestId("product-card").filter({ visible: true });
     await expect(cards).toHaveCount(1);
     await expect(cards).toContainText("تیشرت اورسایز ملانژ سولو");
@@ -107,7 +117,8 @@ test.describe("catalog filtering and sorting", () => {
 
     // Removing the chip restores the full category.
     await page.getByRole("link", { name: "حذف فیلتر سایز فری‌سایز" }).click();
-    await expect(page.getByTestId("result-count")).toHaveText(`${fa(12)} محصول`);
+    await expect(page).toHaveURL(/\/category\/tshirt$/);
+    await expect(count).toHaveText(`${fa(12)} محصول`);
   });
 
   test("discount filter only returns discounted products", async ({ page }) => {
@@ -121,14 +132,14 @@ test.describe("catalog filtering and sorting", () => {
 
   test("sorting by price orders products correctly", async ({ page }) => {
     await page.goto("/shop?category=manto");
-    await page.getByTestId("sort-select").selectOption("price-asc");
+    await page.getByTestId("sort-select").filter({ visible: true }).selectOption("price-asc");
     await expect(page).toHaveURL(/sort=price-asc/);
     await expect(page.locator("[data-pending]")).toHaveCount(0);
     const asc = (await page.getByTestId("product-card").filter({ visible: true }).locator("[data-price]").evaluateAll((els) => els.map((e) => Number(e.getAttribute("data-price")))));
     expect(asc.length).toBe(12);
     expect(asc).toEqual([...asc].sort((a, b) => a - b));
 
-    await page.getByTestId("sort-select").selectOption("price-desc");
+    await page.getByTestId("sort-select").filter({ visible: true }).selectOption("price-desc");
     await expect(page).toHaveURL(/sort=price-desc/);
     await expect(page.locator("[data-pending]")).toHaveCount(0);
     const desc = await page.getByTestId("product-card").filter({ visible: true }).locator("[data-price]").evaluateAll((els) => els.map((e) => Number(e.getAttribute("data-price"))));
@@ -139,7 +150,7 @@ test.describe("catalog filtering and sorting", () => {
     await page.goto("/shop");
     const cards = page.getByTestId("product-card").filter({ visible: true });
     const firstPage = await cards.first().getAttribute("data-product-id");
-    await page.getByTestId("next-page").click();
+    await page.getByTestId("next-page").filter({ visible: true }).click();
     await expect(page).toHaveURL(/page=2/);
     await expect(cards.first()).not.toHaveAttribute("data-product-id", firstPage!);
     await page.goBack();

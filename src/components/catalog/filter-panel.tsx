@@ -25,6 +25,14 @@ export interface FilterPanelProps {
   idPrefix: string;
 }
 
+interface FilterControlsProps {
+  value: CatalogQuery;
+  facets: CatalogFacets;
+  showCategories?: boolean;
+  idPrefix: string;
+  onChange: (next: CatalogQuery) => void;
+}
+
 function toggle(list: string[] | undefined, value: string) {
   const set = new Set(list ?? []);
   if (set.has(value)) set.delete(value);
@@ -32,15 +40,25 @@ function toggle(list: string[] | undefined, value: string) {
   return set.size ? [...set] : undefined;
 }
 
+/** Desktop panel: every change navigates immediately (shareable URL, server-filtered results). */
 export function FilterPanel({ basePath, query, facets, omitCategory, showCategories, idPrefix }: FilterPanelProps) {
   const { navigate } = useCatalogTransition();
   // Controls reflect the user's choice immediately while the server renders new results.
   const [optimistic, setOptimistic] = useOptimistic(query);
+  return (
+    <FilterControls
+      value={optimistic}
+      facets={facets}
+      showCategories={showCategories}
+      idPrefix={idPrefix}
+      onChange={(next) => navigate(catalogHref(basePath, next, { omitCategory }), () => setOptimistic(next))}
+    />
+  );
+}
 
-  const apply = (next: CatalogQuery) => {
-    const nextQuery = { ...next, page: undefined };
-    navigate(catalogHref(basePath, nextQuery, { omitCategory }), () => setOptimistic(nextQuery));
-  };
+/** Stateless filter controls; the parent decides whether a change applies now or later. */
+export function FilterControls({ value: optimistic, facets, showCategories, idPrefix, onChange }: FilterControlsProps) {
+  const apply = (next: CatalogQuery) => onChange({ ...next, page: undefined });
 
   const activePrice = PRICE_RANGES.find((r) => r.min === optimistic.minPrice && r.max === optimistic.maxPrice)?.id;
   const customPrice = !activePrice && (optimistic.minPrice || optimistic.maxPrice);

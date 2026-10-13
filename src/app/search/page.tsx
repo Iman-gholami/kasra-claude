@@ -3,8 +3,7 @@ import Form from "next/form";
 import { Search } from "lucide-react";
 import { Suspense } from "react";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
-import { CatalogSkeleton, CatalogView } from "@/components/catalog/catalog-view";
-import { queryCatalog } from "@/lib/catalog";
+import { CachedCatalogView, CatalogSkeleton } from "@/components/catalog/catalog-view";
 import { parseCatalogSearchParams } from "@/lib/catalog/search-params";
 
 export const metadata: Metadata = {
@@ -69,7 +68,6 @@ async function SearchResults({ searchParams }: Pick<PageProps<"/search">, "searc
       </>
     );
   }
-  const result = await queryCatalog(query);
   return (
     <>
       <h1 className="mt-8 text-[1.75rem] font-extrabold tracking-tight md:text-4xl">
@@ -77,7 +75,7 @@ async function SearchResults({ searchParams }: Pick<PageProps<"/search">, "searc
       </h1>
       <SearchForm defaultValue={query.q} />
       <div className="mt-10">
-        <CatalogView basePath="/search" query={query} result={result} showCategories />
+        <CachedCatalogView basePath="/search" query={query} showCategories />
       </div>
     </>
   );

@@ -48,3 +48,7 @@ next-env.d.ts
 
 # local env (keep the example)
 !.env.example
+
+# deploy bookkeeping
+.current-tag
+.previous-tag

@@ -90,7 +90,6 @@ export interface ProductSummary {
   compareAtPrice?: number;
   discountPercent?: number;
   image: ImageAsset;
-  hoverImage?: ImageAsset;
   colors: ProductColor[];
   inStock: boolean;
   isNew: boolean;

@@ -36,16 +36,6 @@ export function ProductCard({ product, priority, sizes = PRODUCT_GRID_SIZES, hea
             fetchPriority={priority === "high" ? "high" : undefined}
             className="object-cover transition-transform duration-500 ease-out-soft group-hover:scale-[1.025]"
           />
-          {product.hoverImage ? (
-            <Image
-              src={product.hoverImage.src}
-              alt=""
-              fill
-              sizes={sizes}
-              quality={60}
-              className="hidden object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100 [@media(hover:hover)_and_(min-width:1024px)]:block"
-            />
-          ) : null}
         </Link>
 
         <div className="pointer-events-none absolute top-2.5 right-2.5 flex flex-col items-start gap-1.5">

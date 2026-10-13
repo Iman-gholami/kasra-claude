@@ -1,5 +1,7 @@
 import { SearchX } from "lucide-react";
+import { cacheLife, cacheTag } from "next/cache";
 import type { CatalogQuery, CatalogResult } from "@/types/catalog";
+import { queryCatalog } from "@/lib/catalog";
 import { catalogHref, hasActiveRefinements } from "@/lib/catalog/search-params";
 import { formatNumber } from "@/lib/persian";
 import { ProductGrid } from "@/components/products/product-grid";
@@ -83,6 +85,20 @@ export function CatalogView({ basePath, query, result, omitCategory, showCategor
       </div>
     </CatalogTransitionProvider>
   );
+}
+
+/**
+ * Renders a listing for an already-parsed query and caches the rendered
+ * output per query. Pages read `searchParams` (request data) outside this
+ * boundary and pass the normalized query in, so repeat visits to the same
+ * filter URL skip server rendering of the whole listing.
+ */
+export async function CachedCatalogView(props: Omit<CatalogViewProps, "result">) {
+  "use cache";
+  cacheLife("catalog");
+  cacheTag("catalog", "listings");
+  const result = await queryCatalog(props.query);
+  return <CatalogView {...props} result={result} />;
 }
 
 /** Static placeholder shown while request-specific results stream in. */

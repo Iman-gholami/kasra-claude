@@ -1,0 +1,26 @@
+# Keep the build context small and free of secrets.
+.git
+.github
+.claude
+node_modules
+.next
+out
+coverage
+test-results
+playwright-report
+blob-report
+e2e
+playwright.config.ts
+scripts
+docs
+deploy
+*.md
+!README.md
+.env
+.env.*
+!.env.example
+Dockerfile
+docker-compose*.yml
+.dockerignore
+npm-debug.log*
+*.tsbuildinfo

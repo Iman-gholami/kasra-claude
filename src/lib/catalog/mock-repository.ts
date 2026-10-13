@@ -46,7 +46,6 @@ function discountPercent(price: number, compareAt?: number) {
 function toSummary(product: Product): ProductSummary {
   const firstColor = product.colors[0]?.id;
   const front = product.images.find((i) => i.colorId === firstColor && i.kind === "front") ?? product.images[0];
-  const back = product.images.find((i) => i.colorId === firstColor && i.kind === "back");
   const category = categoryBySlug.get(product.categorySlug);
   return {
     id: product.id,
@@ -58,7 +57,6 @@ function toSummary(product: Product): ProductSummary {
     compareAtPrice: product.compareAtPrice,
     discountPercent: discountPercent(product.price, product.compareAtPrice),
     image: { src: front.src, alt: front.alt, width: front.width, height: front.height },
-    hoverImage: back ? { src: back.src, alt: back.alt, width: back.width, height: back.height } : undefined,
     colors: product.colors,
     inStock: product.variants.some((v) => v.stock > 0),
     isNew: newestTimestamp - Date.parse(product.createdAt) <= NEW_WINDOW_DAYS * DAY,
