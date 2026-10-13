@@ -109,7 +109,6 @@ export function VariantPicker({
                   onChange={() => onSizeChange(s)}
                   className="peer sr-only"
                   aria-label={disabled ? `سایز ${sizeLabel(s)} (ناموجود)` : `سایز ${sizeLabel(s)}`}
-                  aria-invalid={sizeError ? true : undefined}
                   data-testid={`size-${s}`}
                 />
                 <span

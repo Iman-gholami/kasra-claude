@@ -31,7 +31,6 @@ export function Hero() {
       <div className="relative aspect-[4/5] max-h-[calc(100svh-6.5rem)] min-h-[30rem] w-full md:aspect-[2/1] md:max-h-[44rem] md:min-h-0">
         <picture>
           <source media="(min-width: 768px)" srcSet={desktopSrcSet} sizes="100vw" />
-          {/* eslint-disable-next-line @next/next/no-img-element -- art-directed <picture> built with getImageProps */}
           <img {...img} srcSet={mobileSrcSet} alt={alt} className="absolute inset-0 size-full object-cover object-top md:object-center" />
         </picture>
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-canvas/80 via-canvas/35 to-transparent md:hidden" aria-hidden />
@@ -48,7 +47,7 @@ export function Hero() {
               شومیز، مانتو و تیشرت با برش‌های راحت و رنگ‌های آرام؛ برای روزهایی که می‌خواهی ساده و شیک باشی.
             </p>
             <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3 md:mt-8">
-              <ButtonLink href="/shop" size="lg" className="px-9">
+              <ButtonLink href="/shop" size="lg">
                 مشاهده محصولات
               </ButtonLink>
               <Link href="/shop?sort=newest" className="group inline-flex h-11 items-center gap-1.5 text-[0.9375rem] font-medium">

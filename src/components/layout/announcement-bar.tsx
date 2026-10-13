@@ -6,13 +6,13 @@ export function AnnouncementBar() {
   return (
     <div className="bg-ink text-white">
       <p className="container-page flex min-h-9 items-center justify-center gap-2 py-1.5 text-center text-xs leading-5">
-        <span className="rounded-xs bg-white/15 px-1.5 py-0.5 text-[0.6875rem] font-semibold">نسخه‌ی نمایشی</span>
-        <span>
-          پیام آزمایشی: ارسال رایگان برای سفارش‌های بالای {formatToman(demoCommerce.freeShippingThreshold)}
-          <Link href="/shipping-and-returns" className="ms-1.5 underline underline-offset-4 hover:no-underline">
-            جزئیات
-          </Link>
+        <span className="shrink-0 rounded-xs bg-white/15 px-1.5 py-0.5 text-[0.6875rem] font-semibold whitespace-nowrap">نمایشی</span>
+        <span className="truncate">
+          <span className="hidden sm:inline">پیام آزمایشی: </span>ارسال رایگان سفارش‌های بالای {formatToman(demoCommerce.freeShippingThreshold)}
         </span>
+        <Link href="/shipping-and-returns" className="shrink-0 underline underline-offset-4 hover:no-underline">
+          جزئیات
+        </Link>
       </p>
     </div>
   );

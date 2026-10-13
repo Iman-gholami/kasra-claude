@@ -125,7 +125,7 @@ export function ProductPurchase({ product, sizeGuide }: ProductPurchaseProps) {
           {justAdded ? <Check className="size-5" aria-hidden /> : null}
           {addLabel}
         </Button>
-        <WishlistButton productId={product.id} productName={product.name} variant="outline" className="size-14" />
+        <WishlistButton productId={product.id} productName={product.name} variant="outline" />
       </div>
       {!soldOut ? (
         <div className="mt-3 sm:hidden">
@@ -148,7 +148,7 @@ export function ProductPurchase({ product, sizeGuide }: ProductPurchaseProps) {
               <p className="truncate text-xs text-ink-soft">{product.name}</p>
               <Price price={product.price} compareAtPrice={product.compareAtPrice} showDiscount={false} />
             </div>
-            <Button onClick={add} className="shrink-0 px-5" data-testid="sticky-add-to-cart">
+            <Button onClick={add} className="shrink-0" data-testid="sticky-add-to-cart">
               {justAdded ? <Check className="size-4" aria-hidden /> : null}
               {effectiveSize ? (justAdded ? "اضافه شد" : "افزودن به سبد") : "انتخاب سایز"}
             </Button>

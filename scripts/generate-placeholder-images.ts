@@ -829,7 +829,7 @@ async function main() {
       if (layout === "desktop") {
         return items.map(([slug, color], i) => ({ visual: visualOf(slug), color, x: 230 + i * 186, scale: 0.6 }));
       }
-      return items.slice(0, 4).map(([slug, color], i) => ({ visual: visualOf(slug), color, x: 190 + i * 236, scale: 0.5 }));
+      return items.slice(0, 4).map(([slug, color], i) => ({ visual: visualOf(slug), color, x: 180 + i * 240, scale: 0.44 }));
     };
 
     jobs.push({
@@ -855,9 +855,11 @@ async function main() {
           id: "hero-m",
           width: 1080,
           height: 1350,
-          railY: 110,
-          railX: [60, 1020],
-          floorY: 900,
+          // Posts sit outside the frame and the floor is low, so the lower
+          // part of the portrait crop stays calm for the overlaid headline.
+          railY: 70,
+          railX: [-40, 1120],
+          floorY: 1220,
           garments: heroGarments("mobile"),
           leafOrigin: P(1080, -60),
           leafScale: 1,

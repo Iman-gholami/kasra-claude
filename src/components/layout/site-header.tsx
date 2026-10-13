@@ -35,7 +35,9 @@ export function SiteHeader() {
           <div className="me-2 hidden w-56 lg:block xl:w-64">
             <SearchTrigger variant="field" />
           </div>
-          <AccountLink className="hidden lg:inline-flex" />
+          <div className="hidden lg:block">
+            <AccountLink />
+          </div>
           <WishlistLink />
           <CartTrigger />
         </div>

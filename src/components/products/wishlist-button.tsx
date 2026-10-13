@@ -31,7 +31,7 @@ export function WishlistButton({ productId, productName, variant = "overlay", cl
         "inline-flex items-center justify-center transition-[background-color,color,transform] duration-150 active:scale-90",
         variant === "overlay"
           ? "size-10 rounded-full bg-surface/85 text-ink shadow-soft backdrop-blur-sm hover:bg-surface"
-          : "size-12 rounded-sm border border-line-strong bg-surface hover:border-ink",
+          : "size-14 shrink-0 rounded-sm border border-line-strong bg-surface hover:border-ink",
         className,
       )}
     >
