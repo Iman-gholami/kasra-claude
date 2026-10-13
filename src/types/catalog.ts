@@ -154,6 +154,8 @@ export interface ProductPurchaseInfo {
   price: number;
   compareAtPrice?: number;
   image: ImageAsset;
+  /** Front image per colour id, used for cart thumbnails. */
+  colorImages: Record<string, ImageAsset>;
   colors: ProductColor[];
   sizes: string[];
   variants: ProductVariant[];

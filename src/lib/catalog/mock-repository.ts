@@ -13,7 +13,7 @@ import type {
   SortKey,
 } from "@/types/catalog";
 import { CATEGORIES, PRODUCTS } from "@/data/catalog";
-import { SIZE_LABELS, SIZE_ORDER } from "@/data/catalog-source";
+import { SIZE_LABELS, SIZE_ORDER } from "@/data/sizes";
 import { compactPersian, normalizePersian } from "@/lib/persian";
 import { DEFAULT_PAGE_SIZE } from "./search-params";
 import type { CatalogRepository } from "./repository";
@@ -254,6 +254,11 @@ export const mockCatalogRepository: CatalogRepository = {
       price: product.price,
       compareAtPrice: product.compareAtPrice,
       image: summary.image,
+      colorImages: Object.fromEntries(
+        product.images
+          .filter((i) => i.kind === "front")
+          .map((i) => [i.colorId, { src: i.src, alt: i.alt, width: i.width, height: i.height }]),
+      ),
       colors: product.colors,
       sizes: product.sizes,
       variants: product.variants,

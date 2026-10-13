@@ -1,7 +1,7 @@
 /**
  * Raw mock catalog for the demo storefront.
  *
- * This file is intentionally self-contained (type-only imports, no path
+ * This file only uses relative imports with explicit `.ts` extensions (no path
  * aliases) so the placeholder image generator in `scripts/` can import it
  * directly with Node's TypeScript type stripping. The storefront never reads
  * these definitions directly — it goes through `src/lib/catalog`.
@@ -41,15 +41,9 @@ export const COLORS = {
 
 export type ColorKey = keyof typeof COLORS;
 
-export const SIZE_LABELS: Record<string, string> = {
-  FS: "فری‌سایز",
-};
-
-export const ALPHA_SIZES = ["S", "M", "L", "XL"];
-export const NUMERIC_SIZES = ["38", "40", "42", "44", "46"];
-
-/** Canonical ordering used by size facets across categories. */
-export const SIZE_ORDER = ["FS", "XS", "S", "M", "L", "XL", "XXL", "36", "38", "40", "42", "44", "46", "48"];
+export { SIZE_LABELS, SIZE_ORDER } from "./sizes.ts";
+import { ALPHA_SIZES, NUMERIC_SIZES } from "./sizes.ts";
+export { ALPHA_SIZES, NUMERIC_SIZES };
 
 export interface CategoryDefinition {
   slug: CategorySlug;

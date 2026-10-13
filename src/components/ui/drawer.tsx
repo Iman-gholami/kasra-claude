@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import { useEffect, useId, useRef, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
-type Side = "right" | "left" | "bottom" | "center";
+type Side = "right" | "left" | "bottom" | "center" | "sheet";
 
 interface DrawerProps {
   open: boolean;
@@ -25,6 +25,9 @@ const panel: Record<Side, string> = {
   left: "fixed inset-y-0 left-0 right-auto h-dvh w-[min(26rem,100vw)] -translate-x-full open:translate-x-0 starting:open:-translate-x-full",
   bottom:
     "fixed inset-x-0 bottom-0 top-auto max-h-[88dvh] w-full rounded-t-lg translate-y-full open:translate-y-0 starting:open:translate-y-full",
+  /** Bottom sheet on phones, centred modal from the md breakpoint. */
+  sheet:
+    "fixed inset-x-0 bottom-0 top-auto max-h-[88dvh] w-full rounded-t-lg translate-y-full open:translate-y-0 starting:open:translate-y-full md:inset-0 md:m-auto md:h-fit md:w-[min(32rem,calc(100vw-2rem))] md:rounded-md md:translate-y-3 md:opacity-0 md:open:translate-y-0 md:open:opacity-100 md:starting:open:translate-y-3 md:starting:open:opacity-0",
   center:
     "fixed inset-0 m-auto h-fit max-h-[88dvh] w-[min(34rem,calc(100vw-2rem))] rounded-md opacity-0 scale-[0.98] open:opacity-100 open:scale-100 starting:open:opacity-0 starting:open:scale-[0.98]",
 };
