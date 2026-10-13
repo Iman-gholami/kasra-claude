@@ -36,15 +36,25 @@ export function ProductPurchase({ product, sizeGuide }: ProductPurchaseProps) {
   const maxQuantity = Math.max(1, Math.min(effectiveSize ? variantStock : demoCommerce.maxQuantityPerLine, demoCommerce.maxQuantityPerLine));
   const qty = Math.min(quantity, maxQuantity);
 
-  // Reveal the compact sticky bar on phones once the main actions scroll away.
+  // Reveal the compact sticky bar on phones once the main actions scroll out
+  // of view above the viewport. A passive, rAF-throttled scroll listener also
+  // catches jumps (anchor links, restored scroll) that skip IO thresholds.
   useEffect(() => {
     const el = actionsRef.current;
     if (!el) return;
-    const observer = new IntersectionObserver(([entry]) => setShowSticky(!entry.isIntersecting && entry.boundingClientRect.top < 0), {
-      threshold: 0,
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      setShowSticky(el.getBoundingClientRect().bottom < 0);
+    };
+    const onScroll = () => {
+      if (!frame) frame = window.requestAnimationFrame(update);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
   }, []);
 
   useEffect(() => {
@@ -119,7 +129,9 @@ export function ProductPurchase({ product, sizeGuide }: ProductPurchaseProps) {
 
       <div ref={actionsRef} className="mt-5 flex items-stretch gap-3">
         {!soldOut ? (
-          <QuantityStepper value={qty} max={maxQuantity} onChange={setQuantity} label="تعداد" className="hidden sm:inline-flex" />
+          <div className="hidden sm:block">
+            <QuantityStepper value={qty} max={maxQuantity} onChange={setQuantity} label="تعداد" className="h-full" />
+          </div>
         ) : null}
         <Button size="lg" className="flex-1" onClick={add} disabled={soldOut} data-testid="add-to-cart">
           {justAdded ? <Check className="size-5" aria-hidden /> : null}
@@ -137,8 +149,8 @@ export function ProductPurchase({ product, sizeGuide }: ProductPurchaseProps) {
       {!soldOut ? (
         <div
           className={cn(
-            "fixed inset-x-0 bottom-0 z-30 border-t border-line bg-surface/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-lift backdrop-blur transition-transform duration-200 lg:hidden",
-            showSticky ? "translate-y-0" : "pointer-events-none translate-y-full",
+            "fixed inset-x-0 bottom-0 z-30 border-t border-line bg-surface/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-lift backdrop-blur transition-[translate,visibility] duration-200 lg:hidden",
+            showSticky ? "visible translate-y-0" : "pointer-events-none invisible translate-y-full",
           )}
           aria-hidden={!showSticky}
           inert={!showSticky}

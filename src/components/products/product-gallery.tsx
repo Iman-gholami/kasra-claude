@@ -43,9 +43,9 @@ function GalleryTrack({ images, productName, isInitial }: { images: ProductImage
   };
 
   return (
-    <div className="lg:sticky lg:top-24 lg:grid lg:grid-cols-[4.5rem_1fr] lg:gap-4" aria-roledescription="گالری تصاویر" aria-label={`تصاویر ${productName}`}>
+    <div className="flex flex-col lg:sticky lg:top-24 lg:grid lg:grid-cols-[4.5rem_1fr] lg:gap-4" aria-roledescription="گالری تصاویر" aria-label={`تصاویر ${productName}`}>
       {/* Thumbnails: a column beside the image on desktop, a row below it on phones */}
-      <ul className="order-2 mt-3 flex gap-2 lg:order-none lg:mt-0 lg:flex-col" aria-label="انتخاب تصویر">
+      <ul className="order-2 mt-3 flex gap-2 lg:order-none lg:mt-0 lg:flex-col" aria-label="انتخاب تصویر" data-testid="gallery-thumbnails">
         {images.map((img, i) => (
           <li key={img.src}>
             <button

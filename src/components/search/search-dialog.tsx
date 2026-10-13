@@ -94,7 +94,11 @@ export default function SearchDialog() {
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "ArrowDown" && options.length) {
+    if (e.key === "Escape") {
+      // A search input swallows Escape to clear itself; close the overlay instead.
+      e.preventDefault();
+      close();
+    } else if (e.key === "ArrowDown" && options.length) {
       e.preventDefault();
       setActive((i) => (i + 1) % options.length);
     } else if (e.key === "ArrowUp" && options.length) {

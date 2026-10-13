@@ -22,7 +22,7 @@ export function Price({ price, compareAtPrice, size = "sm", showDiscount = true,
   const s = sizeClasses[size];
   return (
     <div className={cn("flex flex-wrap items-baseline gap-x-2 gap-y-0.5", className)}>
-      <span className={cn("font-bold tabular-nums", s.price, discounted && "text-rose-deep")}>
+      <span className={cn("font-bold tabular-nums", s.price, discounted && "text-rose-deep")} data-price={price}>
         {formatNumber(price)}
         <span className={cn("ms-1 font-normal text-ink-muted", s.unit)}>تومان</span>
       </span>

@@ -14,7 +14,7 @@ interface SectionHeadingProps {
 
 export function SectionHeading({ eyebrow, title, description, link, id, className }: SectionHeadingProps) {
   return (
-    <div className={cn("flex items-end justify-between gap-6", className)}>
+    <div className={cn("flex flex-wrap items-end justify-between gap-x-6 gap-y-3", className)}>
       <div className="max-w-xl">
         {eyebrow ? (
           <p className="eyebrow mb-2 uppercase tracking-[0.18em]">

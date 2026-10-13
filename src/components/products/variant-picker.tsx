@@ -89,12 +89,13 @@ export function VariantPicker({
       </fieldset>
 
       <fieldset ref={sizeGroupRef} tabIndex={-1} aria-describedby={sizeError ? errorId : undefined} className="relative outline-none">
-        <legend className="mb-3 flex min-h-7 items-center text-sm">
+        {/* Floated legend keeps it in normal flow so the size-guide action can align with it. */}
+        <legend className="float-start mb-3 flex min-h-7 w-full items-center text-sm">
           <span className="font-semibold">سایز:</span>
           <span className="ms-1 text-ink-soft">{size ? sizeLabel(size) : "انتخاب کنید"}</span>
         </legend>
         {sizeAction ? <div className="absolute top-0 left-0">{sizeAction}</div> : null}
-        <div className="flex flex-wrap gap-2">
+        <div className="clear-both flex flex-wrap gap-2">
           {sizes.map((s) => {
             const stock = stockFor(variants, colorId, s);
             const disabled = stock <= 0;

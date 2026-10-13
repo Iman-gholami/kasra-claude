@@ -101,7 +101,7 @@ export function FilterPanel({ basePath, query, facets, omitCategory, showCategor
       </FilterSection>
 
       <FilterSection title="رنگ">
-        <ul className="grid grid-cols-2 gap-x-3 gap-y-1">
+        <ul className="space-y-0.5">
           {facets.colors.map((c) => {
             const checked = optimistic.colors?.includes(c.value) ?? false;
             return (
