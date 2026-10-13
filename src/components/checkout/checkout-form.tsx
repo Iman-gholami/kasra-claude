@@ -150,7 +150,7 @@ export function CheckoutForm() {
   });
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_26rem]">
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_26rem]">
       {/* Order summary: collapsible on phones, sticky column on desktop */}
       <aside className="lg:order-2" aria-labelledby="order-summary-title">
         <div className="rounded-sm border border-line bg-surface lg:sticky lg:top-24">
@@ -198,7 +198,7 @@ export function CheckoutForm() {
         </div>
       </aside>
 
-      <form ref={formRef} noValidate onSubmit={submit} className="space-y-10 lg:order-1" aria-label="فرم ثبت سفارش آزمایشی">
+      <form ref={formRef} noValidate onSubmit={submit} className="min-w-0 space-y-10 lg:order-1" aria-label="فرم ثبت سفارش آزمایشی">
         {showSummary && errorList.length ? (
           <div
             ref={summaryRef}
@@ -367,9 +367,9 @@ export function CheckoutForm() {
         </section>
 
         <div className="space-y-3">
-          <Button type="submit" size="lg" className="w-full" disabled={submitting} data-testid="place-order">
+          <Button type="submit" size="block" className="w-full" disabled={submitting} data-testid="place-order">
             {submitting ? <LoaderCircle className="size-5 animate-spin" aria-hidden /> : <ShieldCheck className="size-5" aria-hidden />}
-            ثبت سفارش آزمایشی — {formatToman(totals.total)}
+            <span className="whitespace-normal text-center leading-6">ثبت سفارش آزمایشی — {formatToman(totals.total)}</span>
           </Button>
           <p className="text-center text-xs text-ink-muted">با ثبت سفارش آزمایشی هیچ پرداخت یا ارسال واقعی انجام نمی‌شود.</p>
         </div>

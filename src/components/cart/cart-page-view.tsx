@@ -45,7 +45,7 @@ export function CartPageView() {
   }
 
   return (
-    <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_26rem]">
+    <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_26rem]">
       <section aria-labelledby="cart-items-title">
         <h2 id="cart-items-title" className="sr-only">
           کالاهای سبد خرید

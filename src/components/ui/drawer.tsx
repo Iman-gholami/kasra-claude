@@ -72,7 +72,8 @@ export function Drawer({
         if (e.target === e.currentTarget) onClose();
       }}
       className={cn(
-        "z-50 m-0 flex-col bg-surface text-ink shadow-lift outline-none open:flex",
+        // The dialog never scrolls itself; only the body region does.
+        "z-50 m-0 flex-col overflow-hidden bg-surface text-ink shadow-lift outline-none open:flex",
         "transition-[translate,opacity,scale,display,overlay] transition-discrete duration-200 ease-out-soft",
         "backdrop:transition-[background-color,display,overlay] backdrop:transition-discrete backdrop:duration-200 starting:open:backdrop:bg-transparent",
         panel[side],

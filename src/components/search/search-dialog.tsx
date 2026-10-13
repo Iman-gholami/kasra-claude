@@ -134,7 +134,7 @@ export default function SearchDialog() {
       onClick={(e) => {
         if (e.target === e.currentTarget) close();
       }}
-      className="fixed inset-x-0 top-0 z-50 m-0 h-dvh w-full bg-canvas opacity-0 outline-none transition-[opacity,translate,display,overlay] transition-discrete duration-200 open:opacity-100 starting:open:-translate-y-2 starting:open:opacity-0 md:h-auto md:max-h-[85dvh] md:shadow-lift"
+      className="fixed inset-x-0 top-0 z-50 m-0 h-dvh w-full overflow-hidden bg-canvas opacity-0 outline-none transition-[opacity,translate,display,overlay] transition-discrete duration-200 open:opacity-100 starting:open:-translate-y-2 starting:open:opacity-0 md:h-auto md:max-h-[85dvh] md:shadow-lift"
     >
       <div className="container-page flex h-full max-w-3xl flex-col py-3 md:py-5">
         <form

@@ -124,7 +124,7 @@ export function FilterControls({ value: optimistic, facets, showCategories, idPr
             const checked = optimistic.colors?.includes(c.value) ?? false;
             return (
               <li key={c.value}>
-                <label className="flex min-h-10 cursor-pointer items-center gap-2.5 text-sm">
+                <label className="relative flex min-h-10 cursor-pointer items-center gap-2.5 text-sm">
                   <input
                     type="checkbox"
                     className="peer sr-only"
@@ -246,7 +246,7 @@ function SwitchRow({
   testId: string;
 }) {
   return (
-    <label className="flex min-h-11 cursor-pointer items-center justify-between gap-3 text-sm">
+    <label className="relative flex min-h-11 cursor-pointer items-center justify-between gap-3 text-sm">
       <span className={cn(checked && "font-semibold")}>
         {label} <span className="text-xs text-ink-muted tabular-nums">({formatNumber(count)})</span>
       </span>

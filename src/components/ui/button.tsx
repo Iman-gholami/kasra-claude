@@ -3,7 +3,7 @@ import type { ComponentProps } from "react";
 import { cn } from "@/lib/cn";
 
 type Variant = "primary" | "secondary" | "ghost" | "soft";
-type Size = "sm" | "md" | "lg";
+type Size = "sm" | "md" | "lg" | "block";
 
 const base =
   "inline-flex select-none items-center justify-center gap-2 whitespace-nowrap rounded-sm font-medium transition-[background-color,border-color,color,transform,box-shadow] duration-150 ease-out active:scale-[0.98] disabled:pointer-events-none disabled:opacity-45 aria-disabled:opacity-45";
@@ -19,6 +19,8 @@ const sizes: Record<Size, string> = {
   sm: "h-10 px-4 text-sm",
   md: "h-12 px-6 text-[0.9375rem]",
   lg: "h-14 px-8 text-base",
+  /** Grows with its content; for long labels that may wrap on narrow screens. */
+  block: "min-h-14 px-6 py-3 text-base",
 };
 
 export function buttonClasses({ variant = "primary", size = "md", className }: { variant?: Variant; size?: Size; className?: string } = {}) {
