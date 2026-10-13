@@ -27,7 +27,7 @@
   --color-danger: #a3352b;
   --color-danger-soft: #f8e7e4;
 
-  --font-sans: var(--font-vazir-fa), var(--font-vazir-latin), Tahoma, "Segoe UI", system-ui, sans-serif;
+  --font-sans: var(--font-vazir), Tahoma, "Segoe UI", system-ui, sans-serif;
 
   /* Restrained radii: sharp editorial edges with a soft touch on controls. */
   --radius-xs: 2px;
@@ -84,7 +84,6 @@
     background-color: var(--color-canvas);
     color: var(--color-ink);
     font-family: var(--font-sans);
-    font-feature-settings: "ss01";
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

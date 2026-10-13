@@ -11,19 +11,21 @@ export interface Toast {
 
 interface UiState {
   cartOpen: boolean;
+  /** Stays true after the first open so the lazily loaded drawer stays mounted. */
+  cartRequested: boolean;
   searchOpen: boolean;
   /** Stays true after the first open so the lazily loaded overlay keeps its state. */
   searchRequested: boolean;
   toasts: Toast[];
 }
 
-export const uiStore = createStore<UiState>({ cartOpen: false, searchOpen: false, searchRequested: false, toasts: [] });
+export const uiStore = createStore<UiState>({ cartOpen: false, cartRequested: false, searchOpen: false, searchRequested: false, toasts: [] });
 
 let toastId = 0;
 const TOAST_MS = 4500;
 
 export const uiActions = {
-  openCart: () => uiStore.setState((s) => ({ ...s, cartOpen: true, searchOpen: false })),
+  openCart: () => uiStore.setState((s) => ({ ...s, cartOpen: true, cartRequested: true, searchOpen: false })),
   closeCart: () => uiStore.setState((s) => ({ ...s, cartOpen: false })),
   openSearch: () => uiStore.setState((s) => ({ ...s, searchOpen: true, searchRequested: true, cartOpen: false })),
   closeSearch: () => uiStore.setState((s) => ({ ...s, searchOpen: false })),

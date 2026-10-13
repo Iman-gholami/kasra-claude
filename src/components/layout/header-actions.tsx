@@ -7,6 +7,7 @@ import { useWishlistCount } from "@/features/wishlist/wishlist-store";
 import { uiActions } from "@/features/ui/ui-store";
 import { useHydrated } from "@/lib/store/create-store";
 import { formatNumber } from "@/lib/persian";
+import { preloadCartDrawer } from "@/components/cart/cart-drawer-loader";
 import { cn } from "@/lib/cn";
 
 const iconButton =
@@ -74,7 +75,16 @@ export function CartTrigger() {
   const hydrated = useHydrated();
   const label = hydrated && count > 0 ? `سبد خرید، ${formatNumber(count)} کالا` : "سبد خرید";
   return (
-    <button type="button" onClick={uiActions.openCart} className={iconButton} aria-label={label} aria-haspopup="dialog" title="سبد خرید">
+    <button
+      type="button"
+      onClick={uiActions.openCart}
+      onPointerEnter={preloadCartDrawer}
+      onFocus={preloadCartDrawer}
+      className={iconButton}
+      aria-label={label}
+      aria-haspopup="dialog"
+      title="سبد خرید"
+    >
       <ShoppingBag className="size-[1.375rem]" strokeWidth={1.6} aria-hidden />
       <CountBadge count={count} label="cart" />
     </button>
