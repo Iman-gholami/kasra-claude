@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getImageProps } from "next/image";
 import { ArrowLeft } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
-import { MODEL_PREVIEW_ENABLED, modelPhotoUrl } from "@/lib/model-photo-preview";
+import { MODEL_PREVIEW_ENABLED, modelPhotoUrl, productModelPhoto } from "@/lib/model-photo-preview";
 
 /**
  * Editorial hero with art direction: a wide composition on tablet/desktop
@@ -10,11 +10,12 @@ import { MODEL_PREVIEW_ENABLED, modelPhotoUrl } from "@/lib/model-photo-preview"
  * fetched eagerly with high priority; no carousel, no autoplay.
  */
 export function Hero() {
-  const alt = MODEL_PREVIEW_ENABLED
+  const heroPhoto = MODEL_PREVIEW_ENABLED ? (modelPhotoUrl(9968422) ?? productModelPhoto("manto", 8)) : null;
+  const alt = heroPhoto
     ? "عکس مدل نمونه با استایل پاییزی؛ عکس محصول واقعی نیست"
     : "رگال لباس با مانتو، شومیز و تیشرت در رنگ‌های خنثی کنار گلدانی از شاخه‌های خشک";
-  const desktopSrc = MODEL_PREVIEW_ENABLED ? modelPhotoUrl(9968422, 2400, 1200) : "/images/hero/hero-desktop.webp";
-  const mobileSrc = MODEL_PREVIEW_ENABLED ? modelPhotoUrl(9968422, 1080, 1350) : "/images/hero/hero-mobile.webp";
+  const desktopSrc = heroPhoto ?? "/images/hero/hero-desktop.webp";
+  const mobileSrc = heroPhoto ?? "/images/hero/hero-mobile.webp";
   const {
     props: { srcSet: desktopSrcSet },
   } = getImageProps({ alt, src: desktopSrc, width: 2400, height: 1200, sizes: "100vw", quality: 75 });

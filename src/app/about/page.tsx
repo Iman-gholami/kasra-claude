@@ -4,7 +4,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { ButtonLink } from "@/components/ui/button";
 import { Notice } from "@/components/ui/notice";
 import { robotsFor } from "@/lib/seo";
-import { MODEL_PREVIEW_ENABLED, modelPhotoUrl } from "@/lib/model-photo-preview";
+import { MODEL_PREVIEW_ENABLED, modelPhotoUrl, productModelPhoto } from "@/lib/model-photo-preview";
 
 export const metadata: Metadata = {
   title: "درباره‌ی کسرا",
@@ -42,7 +42,7 @@ export default function AboutPage() {
           </div>
         </div>
         <div className="relative aspect-[4/5] overflow-hidden rounded-xs bg-sand-soft">
-          <Image src={MODEL_PREVIEW_ENABLED ? modelPhotoUrl(20167646) : "/images/editorial/about.webp"} alt={MODEL_PREVIEW_ENABLED ? "عکس مدل نمونه با استایل شومیز" : "شومیز سفید، مانتوی سبز مریمی و تیشرت صورتی روی رگال لباس"} fill sizes="(min-width: 1024px) 50vw, 100vw" quality={60} className="object-cover" />
+          <Image src={(MODEL_PREVIEW_ENABLED ? modelPhotoUrl(20167646) ?? productModelPhoto("shomiz", 3) : null) ?? "/images/editorial/about.webp"} alt={MODEL_PREVIEW_ENABLED ? "عکس مدل نمونه با استایل شومیز" : "شومیز سفید، مانتوی سبز مریمی و تیشرت صورتی روی رگال لباس"} fill sizes="(min-width: 1024px) 50vw, 100vw" quality={60} className="object-cover" />
         </div>
       </div>
     </div>

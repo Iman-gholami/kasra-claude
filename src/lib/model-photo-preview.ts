@@ -1,7 +1,14 @@
 /**
- * Optional stock-model photography preview.
- * The images are from Pexels, not photos of the mock boutique products.
+ * Opt-in stock model photography preview.
+ * Assets are checked into public/images/model-preview so production and local
+ * preview never make server-side requests to third-party image hosts.
+ *
+ * IMPORTANT: These are sample photographs, NOT the real Kasra garments.
  */
+import "server-only";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
+
 export const MODEL_PREVIEW_ENABLED = process.env.NEXT_PUBLIC_MODEL_PREVIEW === "true";
 
 const MODEL_PHOTO_IDS = {
@@ -11,18 +18,30 @@ const MODEL_PHOTO_IDS = {
 } as const;
 
 export type ModelPhotoCategory = keyof typeof MODEL_PHOTO_IDS;
+const ASSET_ROOT = join(process.cwd(), "public", "images", "model-preview");
 
-export function modelPhotoUrl(photoId: number, width = 1200, height = 1600): string {
-  return `https://images.pexels.com/photos/${photoId}/pexels-photo-${photoId}.jpeg?auto=compress&cs=tinysrgb&w=${width}&h=${height}&fit=crop`;
+/** Return a local URL if a verified JPEG is present; otherwise let the
+ * caller fall back to an original image. Width/height remain in the signature
+ * for compatibility with editorial components and are handled by next/image. */
+export function modelPhotoUrl(photoId: number, _width = 1200, _height = 1600): string | null {
+  if (!MODEL_PREVIEW_ENABLED) return null;
+  const name = `${photoId}.jpg`;
+  if (!existsSync(join(ASSET_ROOT, name))) return null;
+  return `/images/model-preview/${name}`;
 }
 
+/** Prefer a unique category photo, try others from the same category
+ * if it could not be downloaded. Never emit a broken URL. */
 export function productModelPhoto(category: ModelPhotoCategory, ordinal: number): string | null {
   if (!MODEL_PREVIEW_ENABLED) return null;
   const photos = MODEL_PHOTO_IDS[category];
-  return modelPhotoUrl(photos[ordinal % photos.length]);
+  for (let i = 0; i < photos.length; i++) {
+    const src = modelPhotoUrl(photos[(ordinal + i) % photos.length]);
+    if (src) return src;
+  }
+  return null;
 }
 
 export function categoryModelPhoto(category: ModelPhotoCategory): string | null {
-  if (!MODEL_PREVIEW_ENABLED) return null;
-  return modelPhotoUrl(MODEL_PHOTO_IDS[category][0]);
+  return productModelPhoto(category, 0);
 }

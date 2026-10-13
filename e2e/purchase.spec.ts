@@ -24,7 +24,7 @@ test.describe("product variants", () => {
     // the original back image still follows the selected colour.
     const gallery = page.getByTestId("gallery-track").locator("img");
     if (process.env.NEXT_PUBLIC_MODEL_PREVIEW === "true") {
-      await expect(gallery.first()).toHaveAttribute("src", /pexels/);
+      await expect(gallery.first()).toHaveAttribute("src", /model-preview/);
       await expect(gallery.nth(1)).toHaveAttribute("src", /black-back/);
     } else {
       await expect(gallery.first()).toHaveAttribute("src", /black-front/);

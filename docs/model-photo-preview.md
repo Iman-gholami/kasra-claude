@@ -16,7 +16,12 @@ match actual product data. The stock photography is for comparing page design
 only. Never use it for real sales or imply the people model Kasra clothing.
 A notice is shown on every page while this mode is active.
 
-Photographs are served from images.pexels.com and require network access.
+Model photos are stored in public/images/model-preview as checked-in JPEG files.
+Next.js only requests local /images/model-preview/... URLs, so it never needs
+to resolve images.pexels.com at runtime. A GitHub Actions workflow downloads
+and validates the JPEGs once (see scripts/vendor-model-photos.mjs). If any
+requested ID is unavailable, it uses another cached photo in the same
+category or the original illustration, rather than displaying a broken link.
 The images are free-to-use according to their respective Pexels pages; check
 the current license before any other use: https://www.pexels.com/license/.
 IDs and the resulting CDN URLs are in src/lib/model-photo-preview.ts.
