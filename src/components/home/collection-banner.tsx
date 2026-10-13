@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ButtonLink } from "@/components/ui/button";
+import { MODEL_PREVIEW_ENABLED, modelPhotoUrl, productModelPhoto } from "@/lib/model-photo-preview";
 
 export function CollectionBanner() {
   return (
@@ -7,8 +8,8 @@ export function CollectionBanner() {
       <div className="grid overflow-hidden rounded-xs bg-sand-soft md:grid-cols-2">
         <div className="relative aspect-[4/5] md:aspect-auto md:min-h-[36rem]">
           <Image
-            src="/images/editorial/autumn-collection.webp"
-            alt="سه مانتوی پاییزی قهوه‌ای، بژ و ذغالی آویخته روی رگال"
+            src={(MODEL_PREVIEW_ENABLED ? modelPhotoUrl(35332620) ?? productModelPhoto("manto", 10) : null) ?? "/images/editorial/autumn-collection.webp"}
+            alt={MODEL_PREVIEW_ENABLED ? "عکس مدل نمونه با مانتوی پاییزی" : "سه مانتوی پاییزی قهوه‌ای، بژ و ذغالی آویخته روی رگال"}
             fill
             sizes="(min-width: 768px) 50vw, 100vw"
             quality={60}

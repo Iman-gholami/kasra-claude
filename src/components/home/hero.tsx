@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getImageProps } from "next/image";
 import { ArrowLeft } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
+import { MODEL_PREVIEW_ENABLED, modelPhotoUrl, productModelPhoto } from "@/lib/model-photo-preview";
 
 /**
  * Editorial hero with art direction: a wide composition on tablet/desktop
@@ -9,15 +10,20 @@ import { ButtonLink } from "@/components/ui/button";
  * fetched eagerly with high priority; no carousel, no autoplay.
  */
 export function Hero() {
-  const alt = "رگال لباس با مانتو، شومیز و تیشرت در رنگ‌های خنثی کنار گلدانی از شاخه‌های خشک";
+  const heroPhoto = MODEL_PREVIEW_ENABLED ? (modelPhotoUrl(9968422) ?? productModelPhoto("manto", 8)) : null;
+  const alt = heroPhoto
+    ? "عکس مدل نمونه با استایل پاییزی؛ عکس محصول واقعی نیست"
+    : "رگال لباس با مانتو، شومیز و تیشرت در رنگ‌های خنثی کنار گلدانی از شاخه‌های خشک";
+  const desktopSrc = heroPhoto ?? "/images/hero/hero-desktop.webp";
+  const mobileSrc = heroPhoto ?? "/images/hero/hero-mobile.webp";
   const {
     props: { srcSet: desktopSrcSet },
-  } = getImageProps({ alt, src: "/images/hero/hero-desktop.webp", width: 2400, height: 1200, sizes: "100vw", quality: 75 });
+  } = getImageProps({ alt, src: desktopSrc, width: 2400, height: 1200, sizes: "100vw", quality: 75 });
   const {
     props: { srcSet: mobileSrcSet, ...img },
   } = getImageProps({
     alt,
-    src: "/images/hero/hero-mobile.webp",
+    src: mobileSrc,
     width: 1080,
     height: 1350,
     sizes: "100vw",

@@ -26,6 +26,21 @@ npm run start          # serve the production build on :3000
 
 > `next start` prints a notice because the build uses `output: "standalone"` for Docker; it still serves the app correctly for local checks. In containers the app runs `node server.js` from `.next/standalone`.
 
+### Model-photo preview (optional)
+
+For a visual-only comparison with stock photos of fashion models:
+`npm run dev:models` and open `http://localhost:3000`.
+The regular `npm run dev` keeps the original illustrations.
+Product cards, front gallery photos, category tiles, hero and editorial photos
+switch to Pexels stock photography. **These are NOT photos of the products**:
+colours, designs, and multiple angles will not match. The original product
+back and detail images remain in place. All preview photos are stored in
+`public/images/model-preview` and load locally; no external network is
+required at runtime. The vendor workflow downloads/validates these files
+once and commits them to the preview branch.
+Do not use preview mode for customer-facing sales.
+See [docs/model-photo-preview.md](docs/model-photo-preview.md).
+
 ### Quality checks
 
 ```bash

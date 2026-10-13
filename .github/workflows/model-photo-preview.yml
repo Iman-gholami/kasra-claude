@@ -1,0 +1,36 @@
+name: Model photo preview checks
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-and-e2e:
+    runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_MODEL_PREVIEW: "true"
+      NEXT_PUBLIC_ALLOW_INDEXING: "false"
+      NEXT_PUBLIC_SITE_URL: "http://localhost:3000"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.18.0"
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run build:models
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - name: Capture visual preview
+        run: |
+          npm run start -- --port 3000 > /tmp/kasra-next.log 2>&1 &
+          node scripts/capture-model-preview.mjs
+      - name: Upload preview screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kasra-model-preview-screenshots
+          path: artifacts/model-preview/
+          if-no-files-found: warn
