@@ -20,8 +20,15 @@ test.describe("product variants", () => {
     await expect(page.getByTestId("size-XL")).toBeDisabled();
     await expect(page.getByTestId("size-M")).toBeEnabled();
 
-    // Gallery follows the selected colour.
-    await expect(page.getByTestId("gallery-track").locator("img").first()).toHaveAttribute("src", /black-front/);
+    // In model-preview mode the front image is illustrative stock photography;
+    // the original back image still follows the selected colour.
+    const gallery = page.getByTestId("gallery-track").locator("img");
+    if (process.env.NEXT_PUBLIC_MODEL_PREVIEW === "true") {
+      await expect(gallery.first()).toHaveAttribute("src", /pexels/);
+      await expect(gallery.nth(1)).toHaveAttribute("src", /black-back/);
+    } else {
+      await expect(gallery.first()).toHaveAttribute("src", /black-front/);
+    }
     await expect(page.getByTestId("gallery-thumbnails").locator("button")).toHaveCount(3);
 
     await page.locator('label:has(input[data-testid="size-M"])').click();
