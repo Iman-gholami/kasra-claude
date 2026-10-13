@@ -11,7 +11,10 @@
 # NEXT_PUBLIC_* values are inlined into the client bundle at build time, so
 # they are build arguments. Never pass secrets as build arguments.
 
-ARG NODE_IMAGE=node:22-alpine
+# Debian slim (glibc) rather than Alpine (musl): in our measurements the same
+# app served ~24 % more server-rendered requests per second on glibc, at the
+# cost of a larger image (see docs/performance-report.md).
+ARG NODE_IMAGE=node:22-bookworm-slim
 
 # ── 1. Dependencies ──────────────────────────────────────────────────────────
 FROM ${NODE_IMAGE} AS deps
@@ -44,7 +47,7 @@ RUN npm run build
 FROM ${NODE_IMAGE} AS runner
 WORKDIR /app
 # No OS packages are installed, so the image builds without access to the
-# Alpine package mirrors. Run with `--init` (Compose: `init: true`) so a tiny
+# distribution package mirrors. Run with `--init` (Compose: `init: true`) so a tiny
 # init process forwards SIGTERM to Node and reaps zombies; the Next.js server
 # drains in-flight requests on SIGTERM.
 
