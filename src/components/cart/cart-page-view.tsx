@@ -19,9 +19,9 @@ export function CartPageView() {
 
   if (!hydrated) {
     return (
-      <div className="grid gap-8 lg:grid-cols-[1fr_24rem]" role="status" aria-label="در حال بارگذاری سبد خرید">
-        <div className="h-72 animate-pulse rounded-sm bg-sand-soft" />
-        <div className="h-64 animate-pulse rounded-sm bg-sand-soft" />
+      // Same footprint as the empty state to avoid a layout shift after hydration.
+      <div className="min-h-[21rem]" role="status" aria-label="در حال بارگذاری سبد خرید">
+        <div className="mx-auto h-[21rem] max-w-3xl animate-pulse rounded-sm bg-sand-soft/70" />
       </div>
     );
   }
@@ -29,6 +29,7 @@ export function CartPageView() {
   if (!lines.length) {
     return (
       <EmptyState
+        className="min-h-[21rem]"
         icon={<ShoppingBag className="size-7" strokeWidth={1.5} />}
         title="سبد خرید شما خالی است"
         description="هنوز محصولی به سبد اضافه نکرده‌اید. از میان شومیزها، مانتوها و تیشرت‌ها انتخاب کنید."

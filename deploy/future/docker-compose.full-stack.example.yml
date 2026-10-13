@@ -1,0 +1,81 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# PLAN ONLY — NOT RUNNABLE YET.
+#
+# Intended single-server layout once the backend exists. The `api` image does
+# not exist; it documents how services, networks, volumes and resource budgets
+# should fit together on the 8 vCPU / 16 GB ParsPack VPS.
+# See docs/backend-integration.md and docs/deployment.md (Future services).
+# ─────────────────────────────────────────────────────────────────────────────
+name: kasra
+
+x-logging: &logging
+  driver: json-file
+  options: { max-size: "20m", max-file: "5" }
+
+networks:
+  edge:        # Next.js containers, published to 127.0.0.1 for host Nginx
+  backend:     # API ↔ Postgres/Redis; no ports published
+    internal: true
+
+volumes:
+  pg-data:
+  redis-data:
+  web-1-cache:
+  web-2-cache:
+
+services:
+  web-1: &web
+    image: kasra-frontend:${KASRA_TAG}
+    restart: unless-stopped
+    init: true
+    env_file: [.env.production]
+    environment:
+      CATALOG_API_URL: http://api:4000      # server-side calls stay on the private network
+    networks: [edge, backend]
+    ports: ["127.0.0.1:3001:3000"]
+    volumes: [web-1-cache:/app/.next/cache]
+    deploy: { resources: { limits: { cpus: "1.5", memory: 1536M }, reservations: { cpus: "0.5", memory: 512M } } }
+    logging: *logging
+
+  web-2:
+    <<: *web
+    ports: ["127.0.0.1:3002:3000"]
+    volumes: [web-2-cache:/app/.next/cache]
+
+  api:
+    image: kasra-api:${API_TAG}            # future modular backend (single deployable)
+    restart: unless-stopped
+    init: true
+    env_file: [.env.api]                   # DB/Redis credentials, payment keys — from the server secret store
+    networks: [backend, edge]
+    ports: ["127.0.0.1:4000:4000"]         # only Nginx (for /api/v1 public routes) and web-* reach it
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_started }
+    deploy: { resources: { limits: { cpus: "2.0", memory: 2048M }, reservations: { cpus: "0.5", memory: 512M } } }
+    logging: *logging
+
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    env_file: [.env.postgres]              # POSTGRES_PASSWORD etc. — never committed
+    networks: [backend]                    # no published ports: never reachable from the internet
+    volumes: [pg-data:/var/lib/postgresql/data]
+    command: >
+      postgres -c shared_buffers=1GB -c effective_cache_size=3GB -c work_mem=16MB
+               -c max_connections=100 -c wal_compression=on
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 10s
+      retries: 5
+    deploy: { resources: { limits: { cpus: "2.0", memory: 4096M }, reservations: { cpus: "1.0", memory: 2048M } } }
+    logging: *logging
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    networks: [backend]
+    command: ["redis-server", "--maxmemory", "384mb", "--maxmemory-policy", "allkeys-lru", "--appendonly", "no", "--requirepass", "${REDIS_PASSWORD}"]
+    volumes: [redis-data:/data]
+    deploy: { resources: { limits: { cpus: "0.5", memory: 512M } } }
+    logging: *logging

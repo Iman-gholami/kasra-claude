@@ -15,13 +15,28 @@ const securityHeaders = [
   },
 ];
 
+/**
+ * Listing URLs carrying any of these parameters are filtered/sorted/paginated
+ * permutations: they get `X-Robots-Tag: noindex, follow` so page metadata can
+ * stay static (rendered in <head>, not streamed). Keep in sync with
+ * src/lib/catalog/search-params.ts.
+ */
+const CATALOG_PARAMS = ["q", "category", "size", "color", "min", "max", "stock", "sale", "sort", "page"];
+const noindexListingPermutations = CATALOG_PARAMS.flatMap((key) =>
+  ["/shop", "/category/:slug"].map((source) => ({
+    source,
+    has: [{ type: "query" as const, key }],
+    headers: [{ key: "X-Robots-Tag", value: "noindex, follow" }],
+  })),
+);
+
 const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   cacheLife: {
     // Catalog reads (products, listings, search). Short enough that price and
     // stock changes surface within minutes; a backend can also invalidate on
-    // demand with revalidateTag("product:<slug>") / revalidateTag("listings").
+    // demand with revalidateTag("product:<slug>", "max") / revalidateTag("listings", "max").
     catalog: { stale: 60, revalidate: 300, expire: 86_400 },
   },
   // Self-contained server bundle for the Docker runtime image.
@@ -50,6 +65,7 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },
+      ...noindexListingPermutations,
       {
         source: "/images/:path*",
         headers: [

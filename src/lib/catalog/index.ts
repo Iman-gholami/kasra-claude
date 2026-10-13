@@ -3,7 +3,7 @@
  *
  * Every read goes through the configured `CatalogRepository` and is cached
  * with `"use cache"` plus tags, so a future backend can invalidate precisely
- * (e.g. `revalidateTag("product:<slug>")` from an inventory webhook).
+ * (e.g. `revalidateTag("product:<slug>", "max")` from an inventory webhook).
  * Cache lifetimes use the `catalog` profile defined in next.config.ts.
  */
 import "server-only";

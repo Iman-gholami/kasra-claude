@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { CategoryResults, CategoryShell } from "@/components/catalog/catalog-page";
 import { getCategories, getCategory } from "@/lib/catalog";
-import { parseCatalogSearchParams, serializeCatalogQuery } from "@/lib/catalog/search-params";
 import { robotsFor } from "@/lib/seo";
 
 export async function generateStaticParams() {
@@ -9,16 +8,17 @@ export async function generateStaticParams() {
   return categories.map((c) => ({ slug: c.slug }));
 }
 
-export async function generateMetadata({ params, searchParams }: PageProps<"/category/[slug]">): Promise<Metadata> {
-  const [{ slug }, raw] = await Promise.all([params, searchParams]);
+// Depends on params only, so it is prerendered into <head>. Filtered
+// permutations receive `X-Robots-Tag: noindex, follow` from next.config.ts.
+export async function generateMetadata({ params }: PageProps<"/category/[slug]">): Promise<Metadata> {
+  const { slug } = await params;
   const category = await getCategory(slug);
   if (!category) return { title: "دسته‌بندی پیدا نشد" };
-  const query = parseCatalogSearchParams(raw);
   return {
     title: `${category.name} زنانه`,
     description: category.description,
     alternates: { canonical: `/category/${category.slug}` },
-    robots: robotsFor(serializeCatalogQuery(query, { omitCategory: true }) === ""),
+    robots: robotsFor(true),
     openGraph: { title: `${category.name} | بوتیک کسرا`, description: category.description, images: [category.image.src] },
   };
 }
